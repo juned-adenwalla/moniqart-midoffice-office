@@ -1,0 +1,42 @@
+<div class="container" style="margin-bottom: 50px;margin-top: 30px;">
+    <ul class="nav nav-pills">
+        <li class="nav-item active">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('site')"><img src="assets/img/internet.png" style="width: 20px;">&nbsp;&nbsp;Site Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('payment')"><img src="assets/img/rupee.png" style="width: 20px;">&nbsp;&nbsp;Payment Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('email')"><img src="assets/img/arroba.png" style="width: 20px;">&nbsp;&nbsp;Email Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('sms')"><img src="assets/img/message.png" style="width: 20px;">&nbsp;&nbsp;SMS Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('template')"><img src="assets/img/template.png" style="width: 20px;">&nbsp;&nbsp;Email Templates</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" routerLink="/manage-banners"><img src="assets/img/template.png" style="width: 20px;">&nbsp;&nbsp;Banners</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" routerLink="/manage-galleries"><img src="assets/img/template.png" style="width: 20px;">&nbsp;&nbsp;Gallery</a>
+        </li>
+    </ul>
+</div>
+<div class="container" style="margin-bottom: 50px;margin-top: -50px;">
+    <div *ngIf="view == 'site'">
+        <app-form [config]="siteconfig"></app-form>
+    </div>
+    <div *ngIf="view == 'payment'">
+        <app-form [config]="pgconfig"></app-form>
+    </div>
+    <div *ngIf="view == 'email'">
+        <app-form [config]="emailconfig"></app-form>
+    </div>
+    <div *ngIf="view == 'sms'">
+        <app-form [config]="smsconfig"></app-form>
+    </div>
+    <div *ngIf="view == 'template'">
+        <app-form [config]="tempconfig"></app-form>
+    </div>
+</div>  

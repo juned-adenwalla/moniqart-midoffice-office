@@ -1,0 +1,68 @@
+<div class="az-content az-content-dashboard">
+    <div class="container" style="margin-bottom: 50px;">
+      <div class="az-content-body">
+        <div class="az-dashboard-one-title">
+          <div>
+            <h2 class="az-dashboard-title" *ngIf="!paramid"><img src="assets/img/home.png" style="width: 20px;">&nbsp;&nbsp;{{config.addtitle}}</h2>
+            <h2 class="az-dashboard-title" *ngIf="paramid"><img src="assets/img/home.png" style="width: 20px;">&nbsp;&nbsp;{{config.edittitle}}</h2>
+          </div>
+          <div>
+            <button class="btn btn-primary" *ngIf="config.manageroute" style="margin-right: 10px;" (click)="backToList()"><img src="assets/img/back.png" style="width: 20px;">&nbsp;&nbsp;Back to List</button>
+            <button class="btn btn-success" (click)="saveData()"><img src="assets/img/save.png" style="width: 20px;">&nbsp;&nbsp;Save</button>
+          </div>
+        </div>
+        <hr>
+        <div class="text-center" *ngIf="isLoading">
+          <div class="spinner-border" role="status">
+            <!-- <span class="visually-hidden">Loading...</span> -->
+          </div>
+        </div>
+        <div class="row" *ngIf="!isLoading">
+            <div  *ngFor="let data of config.form_fields" class="{{data.class}}">
+              <label style="margin-top: 20px;">{{data?.label}}<span *ngIf="data?.isrequired" style="color: red;">*</span></label>
+              <input *ngIf="data?.type == 'string'" [(ngModel)]="formdata[data?.name]" class="form-control" placeholder="{{data?.label}}" type="text">
+              <input *ngIf="data?.type == 'file'" (change)="uploadFiles($event,data?.name)" class="form-control" type="file">
+              <img style="width: 150px;" *ngIf="data?.type == 'file' && formdata[data?.name] && data.name != 'video' && data.name != 'attachment'" src="{{baseurl}}/api/files/get/{{formdata[data.name]}}">
+              <a href="{{baseurl}}/api/files/get/{{formdata[data.name]}}" *ngIf="data?.name == 'attachment' && data?.type == 'file'" style="margin-top: 10px;" target="_blank">{{formdata[data.name]}}</a>
+              <video *ngIf="data?.type == 'file' && formdata[data?.name] && data.name == 'video'" controls="controls" width="300px">
+                <source src="{{baseurl}}/api/files/get/{{formdata[data.name]}}" type="video/mp4">
+              </video>
+              <div class="progress" *ngIf="progress && data.type == 'file'" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" [style.width.%]="progress">{{progress}}%</div>
+              </div>
+              <input *ngIf="data?.type == 'date'" [(ngModel)]="formdata[data?.name]" class="form-control" type="date">
+              <input *ngIf="data?.type == 'time'" [(ngModel)]="formdata[data?.name]" class="form-control" type="time">
+              <angular-editor *ngIf="data?.type == 'textarea'" [placeholder]="formdata[data?.name]" row="6" [(ngModel)]="formdata[data?.name]"></angular-editor>
+              <select [(ngModel)]="formdata[data?.name]" *ngIf="data?.type == 'select' && data?.option" class="form-control">
+                  <option *ngFor="let opt of data.option" value="{{opt?.value}}">{{opt?.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data?.name]" *ngIf="data?.type == 'select' && data?.option && data?.multiselect" multiple class="form-control">
+                <option *ngFor="let opt of data.option" value="{{opt?.value}}">{{opt?.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" (click)="getSubCategory('parentid',formdata[data.name])" *ngIf="data.name == 'category' && data.name != 'parentid'  && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of categories" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" *ngIf="data.name == 'parentid'  && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of categories" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" *ngIf="data.name == 'country'  && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of country" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" *ngIf="data.name == 'courseid'  && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of courses" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" *ngIf="data.name == 'subcategory' && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of subcategories" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" *ngIf="data.name == 'coursetrainer' && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of trainers" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <select [(ngModel)]="formdata[data.name]" *ngIf="data.name == 'membership' && data?.type == 'select'" class="form-control">
+                <option *ngFor="let opt of membership" value="{{opt._id}}">{{opt.name}}</option>
+              </select>
+              <span style="color: red;" *ngIf="this.warning[data.name] && submitted">{{data.label}} Is Required</span>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>  

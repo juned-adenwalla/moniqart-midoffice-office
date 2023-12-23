@@ -1,0 +1,42 @@
+<div class="container" style="margin-bottom: 50px;margin-top: 30px;">
+    <ul class="nav nav-pills">
+        <li class="nav-item active">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('currency')"><img src="assets/img/currency.png" style="width: 20px;">&nbsp;&nbsp;Currency Markup</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('fee')"><img src="assets/img/fees.png" style="width: 20px;">&nbsp;&nbsp;Fee Markup</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('offer')"><img src="assets/img/offer.png" style="width: 20px;">&nbsp;&nbsp;Offer Markup</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('country')"><img src="assets/img/offer.png" style="width: 20px;">&nbsp;&nbsp;Country Markup</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('state')"><img src="assets/img/offer.png" style="width: 20px;">&nbsp;&nbsp;State Markup</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('news')"><img src="assets/img/offer.png" style="width: 20px;">&nbsp;&nbsp;News Articles</a>
+        </li>
+    </ul>
+</div>
+<div class="container" style="margin-bottom: 50px;margin-top: -50px;">
+    <div *ngIf="view == 'currency'">
+        <app-search [config]="currency_config"></app-search>
+    </div>
+    <div *ngIf="view == 'fee'">
+        <app-search [config]="fee_config"></app-search>
+    </div>
+    <div *ngIf="view == 'offer'">
+        <app-search [config]="offer_config"></app-search>
+    </div>
+    <div *ngIf="view == 'country'">
+        <app-search [config]="country_config"></app-search>
+    </div>
+    <div *ngIf="view == 'state'">
+        <app-search [config]="state_config"></app-search>
+    </div>
+    <div *ngIf="view == 'news'">
+        <app-search [config]="news_config"></app-search>
+    </div>
+</div>  

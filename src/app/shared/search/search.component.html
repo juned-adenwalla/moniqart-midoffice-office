@@ -1,0 +1,124 @@
+<div class="az-content az-content-dashboard">
+    <div class="container">
+      <div class="az-content-body">
+        <div class="az-dashboard-one-title" *ngIf="config.name != 'transactions'">
+          <div>
+            <h2 class="az-dashboard-title"><img src="assets/img/home.png" style="width: 20px;">&nbsp;&nbsp;{{config.listtitle}}</h2>
+            <!-- <p class="az-dashboard-text">Your web analytics dashboard template.</p> -->
+          </div>
+          <div class="az-content-header-right">
+            <button class="btn btn-purple" (click)="exportToCsv()"><img src="assets/img/share.png" style="width: 20px;">&nbsp;&nbsp;Export</button>
+            <button class="btn btn-success" (click)="addClick()"><img src="assets/img/add.png" style="width: 20px;">&nbsp;&nbsp;Add Record</button>
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px;" *ngIf="config.name != 'transactions'">
+          <div class="col-xl-3 col-md-6">
+              <div class="card bg-pattern">
+                  <div class="card-body">
+                      <div class="float-right">
+                          <i class="fa fa-archive text-primary h4 ml-3"></i>
+                      </div>
+                      <h5 class="font-size-20 mt-0 pt-1">{{count?.total}}</h5>
+                      <p class="text-muted mb-0">Total {{config?.title}}</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-xl-3 col-md-6">
+              <div class="card bg-pattern">
+                  <div class="card-body">
+                      <div class="float-right">
+                          <i class="fa fa-th text-primary h4 ml-3"></i>
+                      </div>
+                      <h5 class="font-size-20 mt-0 pt-1">{{count?.active}}</h5>
+                      <p class="text-muted mb-0">Active {{config?.title}}</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-xl-3 col-md-6">
+              <div class="card bg-pattern">
+                  <div class="card-body">
+                      <div class="float-right">
+                          <i class="fa fa-ban text-primary h4 ml-3"></i>
+                      </div>
+                      <h5 class="font-size-20 mt-0 pt-1">{{count?.inactive}}</h5>
+                      <p class="text-muted mb-0">In-Active {{config?.title}}</p>
+                  </div>
+              </div>
+          </div>  
+        </div>
+        <div class="row">
+          <div *ngFor="let data of config.search_fields" class="{{data.class}}">
+            <label>{{data.name}}</label>
+            <input *ngIf="data.type == 'string'" type="text" (change)="initFunction(data.value)" [(ngModel)]="searchvalue" class="form-control">
+            <select (change)="initFunction(data.value)" [(ngModel)]="searchvalue" *ngIf="data?.type == 'select' && data?.option" class="form-control">
+              <option *ngFor="let opt of data.option" value="{{opt?.value}}">{{opt?.name}}</option>
+            </select>
+          </div>
+        </div>
+        <hr>
+        <div class="text-center" *ngIf="isLoading">
+          <div class="spinner-border" role="status">
+            <!-- <span class="visually-hidden">Loading...</span> -->
+          </div>
+        </div>
+        <div class="table-responsive" style="margin-top: 30px;"  *ngIf="!isLoading">
+            <table class="table table-bordered table-striped mg-b-0" id="excel-table">
+              <thead>
+                <tr>
+                  <th *ngFor="let data of config.list_fields">{{data.title}}</th>
+                  <th *ngIf="config.name != 'transactions'">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of listdata | paginate: { itemsPerPage: 10, currentPage: p }">
+                  <td *ngFor="let col of config.list_fields">
+                    <img style="width: 100px;" *ngIf="col.field_type == 'image'" src="{{baseurl}}/api/files/get/{{data[col.field_name]}}">
+                    <span *ngIf="col.field_type == 'string' && col.field_name != 'status'">{{data[col.field_name] | titlecase | slice:0:30}} {{data.field_add ? data.field_add : ''}}</span>
+                    <span *ngIf="col.field_type == 'number'">{{data[col.field_name]}} {{data.field_add ? data.field_add : ''}}</span>
+                    <span *ngIf="col.field_type == 'string' && col.field_name == 'status'">
+                      <span *ngIf="data[col.field_name] == 1" class="badge badge-success">Active</span>
+                      <span *ngIf="data[col.field_name] == 0" class="badge badge-danger">In-Active</span>
+                      <span *ngIf="data['status'] == 2" class="badge badge-warning">Oh-Hold</span>
+                    </span>
+                    <span *ngIf="col.field_type == 'string' && col.field_name == 'trans'">
+                      <span *ngIf="data['status'] == 1" class="badge badge-success">Success</span>
+                      <span *ngIf="data['status'] == 0" class="badge badge-danger">Failed</span>
+                      <span *ngIf="data['status'] == 2" class="badge badge-warning">Refunded</span>
+                      <span *ngIf="data['status'] == 3" class="badge badge-warning">Oh-Hold</span>
+                    </span>
+                    <span *ngIf="col.field_type == 'string' && col.field_name == 'order'">
+                      <span *ngIf="data['status'] == 1" class="badge badge-warning">In-Progress</span>
+                      <span *ngIf="data['status'] == 0" class="badge badge-danger">Cancelled</span>
+                      <span *ngIf="data['status'] == 2" class="badge badge-warning">On-Hold</span>
+                      <span *ngIf="data['status'] == 3" class="badge badge-success">Delivered</span>
+                    </span>
+                    <span *ngIf="col.field_type == 'select' && col.field_name == 'changetrans'">
+                      <select [(ngModel)]="data['status']" (change)="saveData(config?.collection,data._id,data?.status)" class="form-control">
+                        <option selected>Change Status</option>
+                        <option value="1">Success</option>
+                        <option value="0">Failed</option>
+                        <option value="2">Refunded</option>
+                        <option value="3">On-Hold</option>
+                      </select>
+                    </span>
+                    <span *ngIf="col.field_type == 'select' && col.field_name == 'changeorder'">
+                      <select [(ngModel)]="data['status']" (change)="saveData(config?.collection,data._id,data?.status)" class="form-control">
+                        <option selected>Change Status</option>
+                        <option value="1">In-Progress</option>
+                        <option value="0">Cancelled</option>
+                        <option value="2">On-Hold</option>
+                        <option value="3">Delivered</option>
+                      </select>
+                    </span>
+                    <span *ngIf="col.field_type == 'date'">{{data[col.field_name] | date: 'full'}}</span>
+                  </td>
+                  <td *ngIf="config.name != 'transactions' && config.name != 'orders'"><button (click)="editRecord(data['_id'])" style="border: none;"><img src="assets/img/edit.png" style="width: 20px;"></button></td>
+                  <td *ngIf="config.name == 'orders'"><button (click)="editUser(data['userid'])" style="border: none;"><img src="assets/img/edit.png" style="width: 20px;"></button></td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls style="margin-top: 30px;float: right;padding: 20px;" (pageChange)="p = $event"></pagination-controls>
+        </div>
+      </div>
+    </div>
+</div>         

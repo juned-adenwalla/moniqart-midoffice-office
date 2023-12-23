@@ -1,0 +1,253 @@
+<div class="az-content az-content-dashboard" *ngIf="paramid" style="margin-bottom: -50px;">
+    <div class="container" style="margin-bottom: 20px;">
+        <ul class="nav nav-pills">
+            <li class="nav-item active">
+                <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('profile')"><img src="assets/img/userwhite.png" style="width: 20px;">&nbsp;&nbsp;User Profile</a>
+            </li>
+            <li class="nav-item active">
+                <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('transaction')"><img src="assets/img/tran.png" style="width: 20px;">&nbsp;&nbsp;User Transaction</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('courses')"><img src="assets/img/coursewhite.png" style="width: 20px;">&nbsp;&nbsp;User Courses</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('orders')"><img src="assets/img/orders.png" style="width: 20px;">&nbsp;&nbsp;User Orders</a>
+            </li>
+        </ul>
+    </div>
+</div>    
+<div class="container" style="margin-bottom: 50px;">
+    <div *ngIf="view == 'profile'">
+        <app-form [config]="config"></app-form>
+    </div>
+    <div *ngIf="view == 'transaction'">
+        <div class="az-dashboard-one-title" style="margin-top: 30px;">
+            <div>
+              <h2 class="az-dashboard-title"><img src="assets/img/home.png" style="width: 20px;">&nbsp;&nbsp;Payment Transaction</h2>
+            </div>
+            <div>
+              <button class="btn btn-primary" *ngIf="config.manageroute" style="margin-right: 10px;" (click)="backToList()"><img src="assets/img/back.png" style="width: 20px;">&nbsp;&nbsp;Back to List</button>
+            </div>
+        </div>
+        <hr>
+        <table style="margin-top: 30px;" class="table table-bordered table-striped mg-b-0" id="excel-table">
+            <thead>
+              <tr>
+                <th>Payment ID</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Change Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of transactions">
+                <td>{{ data["transid"] }}</td>
+                <td>{{ data["amount"] }}</td>
+                <td>{{ data["currency"] }}</td>
+                <td>
+                    <span *ngIf="data['status'] == 1" class="badge badge-success">Success</span>
+                    <span *ngIf="data['status'] == 0" class="badge badge-danger">Failed</span>
+                    <span *ngIf="data['status'] == 2" class="badge badge-warning">Refunded</span>
+                    <span *ngIf="data['status'] == 3" class="badge badge-warning">On-Hold</span>
+                </td>
+                <td>{{ data["CreationDate"] }}</td>
+                <td>
+                    <select [(ngModel)]="data['status']" (change)="saveData('tbltransactions',data._id,data?.status)" class="form-control">
+                        <option selected>Change Status</option>
+                        <option value="1">Success</option>
+                        <option value="0">Failed</option>
+                        <option value="2">Refunded</option>
+                        <option value="3">On-Hold</option>
+                    </select>
+                </td>
+                <td>
+                    <button (click)="sendMail('trans',data['_id'])" class="btn btn-success">Send Mail</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>    
+    </div>
+    <div *ngIf="view == 'courses'">
+        <div class="az-dashboard-one-title" style="margin-top: 30px;">
+            <div>
+              <h2 class="az-dashboard-title"><img src="assets/img/home.png" style="width: 20px;">&nbsp;&nbsp;User Courses</h2>
+            </div>
+            <div>
+              <button class="btn btn-primary" *ngIf="config.manageroute" style="margin-right: 10px;" (click)="backToList()"><img src="assets/img/back.png" style="width: 20px;">&nbsp;&nbsp;Back to List</button>
+            </div>
+        </div>
+        <hr>
+        <table style="margin-top: 30px;" class="table table-bordered table-striped mg-b-0" id="excel-table">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Purchase Date</th>
+                <th>Status</th>
+                <th>Change Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of usercourses">
+                    <td>{{ data["coursename"] }}</td>
+                    <td>{{ data["CreationDate"] }}</td>
+                    <td>
+                        <span *ngIf="data['status'] == 1" class="badge badge-success">Active</span>
+                        <span *ngIf="data['status'] == 0" class="badge badge-danger">In-Active</span>
+                        <span *ngIf="data['status'] == 2" class="badge badge-warning">On-Hold</span>
+                    </td>
+                    <td>
+                        <select [(ngModel)]="data['status']" (change)="saveData('tblusercourses',data._id,data?.status)" class="form-control">
+                            <option selected>Change Status</option>
+                            <option value="1">Active</option>
+                            <option value="0">In-Active</option>
+                            <option value="2">On-Hold</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button (click)="sendMail('course',data['_id'])" class="btn btn-success">Send Mail</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="view == 'orders'">
+        <div *ngIf="!viewcourse">
+            <div class="az-dashboard-one-title" style="margin-top: 30px;">
+                <div>
+                  <h2 class="az-dashboard-title"><img src="assets/img/home.png" style="width: 20px;">&nbsp;&nbsp;Recent Orders</h2>
+                </div>
+                <div>
+                  <button class="btn btn-primary" *ngIf="config.manageroute" style="margin-right: 10px;" (click)="backToList()"><img src="assets/img/back.png" style="width: 20px;">&nbsp;&nbsp;Back to List</button>
+                </div>
+            </div>
+            <table style="margin-top: 30px;" class="table table-bordered table-striped mg-b-0" id="excel-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Change Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let data of orders">
+                    <td>{{ data["_id"] }}</td>
+                    <td>
+                        <span *ngIf="data['status'] == 1" class="badge badge-warning">In-Progress</span>
+                        <span *ngIf="data['status'] == 0" class="badge badge-danger">Cancelled</span>
+                        <span *ngIf="data['status'] == 2" class="badge badge-warning">On-Hold</span>
+                        <span *ngIf="data['status'] == 3" class="badge badge-success">Delivered</span>
+                    </td>
+                    <td>{{ data["CreationDate"] }}</td>
+                    <td>
+                        <select [(ngModel)]="data['status']" (change)="saveData('tblorders',data._id,data?.status)" class="form-control">
+                            <option selected>Change Status</option>
+                            <option value="1">In-Progress</option>
+                            <option value="0">Cancelled</option>
+                            <option value="2">On-Hold</option>
+                            <option value="3">Delivered</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a style="cursor: pointer;" (click)="getOrderData(data['_id'])"><i class="fa-regular fa-eye"></i>Check</a>&nbsp;
+                        <button (click)="sendMail('order',data['_id'])" class="btn btn-success">Send Mail</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table> 
+        </div>
+        <div *ngIf="viewcourse">  
+            <div class="az-dashboard-one-title" style="margin-top: 30px;">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Order Summary &nbsp;&nbsp;
+                    <span *ngIf="orderdetail['status'] == 1 || orderdetail['status'] == '1'" style="padding: 5px;color: white;background-color: rgb(255, 166, 0);border-radius: 5px;font-size: 10px;">In-Progress</span>
+                    <span *ngIf="orderdetail['status'] == 0 || orderdetail['status'] == '0'" style="padding: 5px;color: white;background-color: red;border-radius: 5px;font-size: 10px;">Cancelled</span>
+                    <span *ngIf="orderdetail['status'] == 2 || orderdetail['status'] == '2'" style="padding: 5px;color: white;background-color: rgb(255, 166, 0);border-radius: 5px;font-size: 10px;">On-Hold</span>
+                    <span *ngIf="orderdetail['status'] == 3 || orderdetail['status'] == '3'" style="padding: 5px;color: white;background-color:green ;border-radius: 5px;font-size: 10px;">Delivered</span>
+                </h1>
+                <button type="button" (click)="viewcourse = false"  class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"><img src="assets/img/back.png" style="width: 20px;">&nbsp;&nbsp;Back to List</button>
+            </div>
+            <hr>
+            <div style="margin-top: 30px;">
+                <table class="main" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td class="content-wrap aligncenter">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tbody>
+                                <tr>
+                                    <td class="content-block">
+                                        <table class="invoice">
+                                            <tbody><tr>
+                                                <td>
+                                                    <h6>User Detail</h6>
+                                                    {{orderdetail['username']}}&nbsp;({{orderdetail['CreationDate'] | date:'d MMMM yyyy'}})<br>
+                                                    {{orderdetail['userphone']}}&nbsp;{{orderdetail['useremail']}}
+                                                    <hr>
+                                                    {{orderdetail['address']}}<br>
+                                                    {{orderdetail['town']}}<br>
+                                                    {{orderdetail['country']}}<br>
+                                                    {{orderdetail['postcode']}}<br>
+                                                    <div *ngIf="orderdetail['message']">
+                                                        <hr>
+                                                        <h6>Notes</h6>
+                                                        {{orderdetail['message']}}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <hr>
+                                            <h6>Product Detail</h6>
+                                            <tr>
+                                                <td>
+                                                    <table class="invoice-items" cellpadding="0" cellspacing="0">
+                                                        <tbody>
+                                                            <tr *ngFor="let data of orderderditem">
+                                                                <td>{{productById(data)[0]?.name}}</td>
+                                                                <td class="alignright"></td>
+                                                                <td>
+                                                                    <!-- <a *ngIf="productById(data)[0]['attachment'] && orderdetail['status'] != '0' && orderdetail['status'] != '2'" href="{{baseurl}}/api/files/get/{{productById(data)[0]['attachment']}}" target="_blank"><i class="fas fa-download"></i></a>
+                                                                    <i *ngIf="!productById(data)[0]['attachment'] || orderdetail['status'] == '0' || orderdetail['status'] == '2'" class="fas fa-ban"></i> -->
+                                                                </td>
+                                                            </tr>
+                                                    </tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+</div> 
+<!-- Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+       
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+</div>

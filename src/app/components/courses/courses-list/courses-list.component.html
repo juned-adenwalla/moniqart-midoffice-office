@@ -1,0 +1,18 @@
+<div class="container" style="margin-bottom: 50px;margin-top: 30px;">  
+    <ul class="nav nav-pills">
+        <li class="nav-item active">
+            <a class="btn btn-primary btn-sm" style="color:white;margin-right: 10px;" (click)="changeTab('courses')"><img src="assets/img/course.png" style="width: 20px;">&nbsp;&nbsp;Manage Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary btn-sm" style="color:white;margin-right: 10px;" (click)="changeTab('lessons')"><img src="assets/img/more.png" style="width: 20px;">&nbsp;&nbsp;Manage Lessons</a>
+        </li>
+    </ul>     
+</div>
+<div class="container" style="margin-bottom: 50px;margin-top: -50px;">
+    <div *ngIf="view == 'courses'">
+        <app-search [config]="courseconfig"></app-search>
+    </div>
+    <div *ngIf="view == 'lessons'">
+        <app-search [config]="lessonconfig"></app-search>
+    </div>
+</div>  

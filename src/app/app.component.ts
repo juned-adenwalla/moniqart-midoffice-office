@@ -7,4 +7,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'midoffice';
+
+  userIsLogged(){
+    if(localStorage.getItem('userdata')){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }

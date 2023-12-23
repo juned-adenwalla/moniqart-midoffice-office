@@ -1,0 +1,77 @@
+<div class="az-content az-content-dashboard">
+  <div class="container">
+    <div class="az-content-body">
+      <div class="az-dashboard-one-title">
+        <div>
+          <h2 class="az-dashboard-title">Hi, {{userdata?.name}}</h2>
+          <p class="az-dashboard-text">Welcome Back to Moniqart Dashboard</p>
+        </div>
+        <div class="az-content-header-right">
+          <a class="btn btn-purple" style="color: white;" href="https://clientarea.adenwalla.in/"><i class="fa fa-question-circle"></i>&nbsp;&nbsp;Need Help</a>
+          <a class="btn btn-success" style="color: white;" (click)="userLogout()"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Logout</a>
+        </div>
+      </div><!-- az-dashboard-one-title -->
+      <div class="row">
+        <div class="col">
+          <div class="card radius-10 border-start border-0 border-3 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div>
+                <p class="mb-0 text-secondary">Total users</p>
+                <h4 class="my-1 text-info">{{count?.users}}</h4>
+                <!-- <p class="mb-0 font-13">+2.5% from last week</p> -->
+              </div>
+              <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="fa fa-users"></i>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card radius-10 border-start border-0 border-3 border-danger">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div>
+                    <p class="mb-0 text-secondary">Total Courses</p>
+                    <h4 class="my-1 text-danger">{{count?.courses}}</h4>
+                    <!-- <p class="mb-0 font-13">+5.4% from last week</p> -->
+                  </div>
+                  <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class="fa fa-bar-chart"></i>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card radius-10 border-start border-0 border-3 border-success">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div>
+                    <p class="mb-0 text-secondary">Total Purchased</p>
+                    <h4 class="my-1 text-success">{{count?.purchases}}</h4>
+                    <!-- <p class="mb-0 font-13">-4.5% from last week</p> -->
+                  </div>
+                  <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i class="fa fa-shopping-cart"></i>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div> 
+      </div>
+      <ul class="nav nav-pills">
+          <li class="nav-item active">
+              <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('transaction')"><img src="assets/img/userwhite.png" style="width: 20px;">&nbsp;&nbsp;Transactions</a>
+          </li>
+          <li class="nav-item active">
+              <a class="btn btn-primary" style="color:white;margin-right: 10px;" (click)="changeTab('orders')"><img src="assets/img/tran.png" style="width: 20px;">&nbsp;&nbsp;Orders</a>
+          </li>
+      </ul>
+      <div *ngIf="view == 'transaction'">
+        <app-search [config]="tansconfig"></app-search>
+      </div>
+      <div *ngIf="view == 'orders'">
+        <app-search [config]="orderconfig"></app-search>
+      </div>
+    </div><!-- az-content-body -->
+  </div>
+</div>

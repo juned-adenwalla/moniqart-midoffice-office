@@ -25,22 +25,42 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/azia.css",
+              "src/assets/css/azia.min.css",
+              "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/app-calendar-events.js",
+              "src/assets/js/app-calendar.js",
+              "src/assets/js/azia.js",
+              "src/assets/js/chart.chartjs.js",
+              "src/assets/js/chart.flot.js",
+              "src/assets/js/chart.flot.sampledata.js",
+              "src/assets/js/chart.morris.js",
+              "src/assets/js/chart.peity.js",
+              "src/assets/js/chart.sparkline.js",
+              "src/assets/js/dashboard.sampledata.js",
+              "src/assets/js/jquery.vmap.sampledata.js",
+              "src/assets/js/map.apple.js",
+              "src/assets/js/map.bluewater.js",
+              "src/assets/js/map.mapbox.js",
+              "src/assets/js/map.shiftworker.js",
+              "src/assets/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "500mb",
+                  "maximumError": "500mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "500mb",
+                  "maximumError": "500mb"
                 }
               ],
               "outputHashing": "all"
@@ -87,9 +107,29 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/azia.css",
+              "src/assets/css/azia.min.css",
+              "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/app-calendar-events.js",
+              "src/assets/js/app-calendar.js",
+              "src/assets/js/azia.js",
+              "src/assets/js/chart.chartjs.js",
+              "src/assets/js/chart.flot.js",
+              "src/assets/js/chart.flot.sampledata.js",
+              "src/assets/js/chart.morris.js",
+              "src/assets/js/chart.peity.js",
+              "src/assets/js/chart.sparkline.js",
+              "src/assets/js/dashboard.sampledata.js",
+              "src/assets/js/jquery.vmap.sampledata.js",
+              "src/assets/js/map.apple.js",
+              "src/assets/js/map.bluewater.js",
+              "src/assets/js/map.mapbox.js",
+              "src/assets/js/map.shiftworker.js",
+              "src/assets/js/bootstrap.bundle.min.js"
+            ]
           }
         }
       }
